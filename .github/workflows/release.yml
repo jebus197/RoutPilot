@@ -1,0 +1,20 @@
+name: build-release
+on:
+  push:
+    tags: ['v*.*.*']
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Chrome ZIP
+        run: |
+          test -d chrome || { echo "chrome/ folder missing"; exit 1; }
+          mkdir -p dist
+          (cd chrome && zip -qr ../dist/RoutePilot_${GITHUB_REF_NAME}_chrome.zip .)
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/RoutePilot_${{ github.ref_name }}_chrome.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
