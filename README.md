@@ -1,4 +1,4 @@
-ChatGPT Routing Helper — Rationale, Release Notes & Install Guide (Chrome & Firefox)
+ChatGPT RoutPilot Routing Helper — Rationale, Release Notes & Install Guide (Chrome & Firefox)
 Overview
 ChatGPT Routing Helper is a lightweight browser extension that exposes model “routing” controls and best-practice meta prompts directly inside ChatGPT’s web UI. It adds a compact panel that can automatically prepend a structured meta line and (optionally) a self-reflection rubric to each message, and records a local log of which options were injected. This helps users drive consistent reasoning depth, complexity, verbosity, push-back behavior, and tool-usage budgets—without manually pasting meta prompts on every turn.
 Why it matters
