@@ -2,7 +2,7 @@
 
 Rationale, Release Notes & Install Guide (Chrome + Firefox)
 Overview
-RoutePilot is a lightweight browser extension that surfaces ChatGPT “routing” controls and best‑practice meta prompts directly inside the ChatGPT web UI. 
+RoutePilot is a lightweight browser extension that surfaces ChatGPT 5x “routing” controls and best‑practice meta prompts directly inside the ChatGPT web UI. 
 It adds a compact, draggable panel that can automatically prepend a structured meta line—and, optionally, a private self‑reflection rubric—to every message while keeping a local log of which options were injected. 
 The result: consistent reasoning depth, complexity, verbosity and push‑back without manual copy‑paste.
 Why it matters
