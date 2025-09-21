@@ -1,0 +1,1 @@
+// background script placeholder for Firefox MV2
