@@ -18,6 +18,11 @@
     panelPos:{right:16,bottom:108}, fabPos:{right:18,bottom:18}, hidden:false, log:[]
   };
 
+  // Preload chime audio. Using Audio object ensures it plays the
+  // pleasant chime (stored in Chime.wav) instead of the default
+  // oscillator beep. This will be used in playChime().
+  const chimeAudio = new Audio(chrome.runtime.getURL('Chime.wav'));
+
   // Insert base UI
   function html() {
     return `
@@ -155,11 +160,29 @@
       await persist({panelPos:state.panelPos});
     });
 
-    // Hide -> show FAB
-    QS('#rp-hide').addEventListener('click', async ()=>{
+    // Collapse only when the user interacts with the "Hide" button.
+    // We intentionally avoid listening on the entire header so it can be dragged
+    // without collapsing inadvertently. Define a helper to collapse the panel.
+    async function hidePanel() {
       QS('#rp-panel').classList.add('rp-hidden');
-      const fab = QS('#rp-fab'); fab.classList.remove('rp-hidden');
-      state.hidden = true; await persist({hidden:true});
+      const fabBtn = QS('#rp-fab');
+      fabBtn.classList.remove('rp-hidden');
+      state.hidden = true;
+      await persist({hidden:true});
+    }
+
+    // Collapse only when the user interacts with the "Hide" button itself.
+    // On some trackpads a light tap only triggers pointerdown, not click,
+    // so we listen on pointerdown. We stop propagation to avoid the
+    // header drag logic capturing the event. A separate click handler is
+    // kept as a fallback for devices that do not emit pointerdown on taps.
+    QS('#rp-hide').addEventListener('pointerdown', async (e) => {
+      e.stopPropagation();
+      await hidePanel();
+    });
+    QS('#rp-hide').addEventListener('click', async (e) => {
+      e.stopPropagation();
+      await hidePanel();
     });
     // FAB click -> open
     const fab = QS('#rp-fab');
@@ -344,22 +367,16 @@
     }, 500);
   }
 
-  // Audio (no click beeps; only on completion). Context created/resumed on first user gesture.
+  // Audio (no click beeps; only on completion). Uses the bundled
+  // Chime.wav for the chime sound. The audio context (oscillator)
+  // approach is removed in favour of playing the provided WAV. The
+  // AudioContext resume handler remains for other audio features.
   const audio = {ac:null};
   function playChime(){
     try{
-      if(!audio.ac) return; // user gesture not yet occurred
-      const ac = audio.ac;
-      const o = ac.createOscillator();
-      const g = ac.createGain();
-      o.type='sine'; o.frequency.value=880;
-      o.connect(g); g.connect(ac.destination);
-      const now = ac.currentTime;
-      g.gain.setValueAtTime(0.0001, now);
-      g.gain.exponentialRampToValueAtTime(0.15, now+0.04);
-      g.gain.exponentialRampToValueAtTime(0.0001, now+0.22);
-      o.start(now);
-      o.stop(now+0.25);
+      // reset playback so repeated completions always play from start
+      chimeAudio.currentTime = 0;
+      chimeAudio.play().catch(() => {});
     }catch(e){/* ignore */}
   }
 

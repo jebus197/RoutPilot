@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "RoutePilot \u2013 GPT\u20115 Prompt Router (v5.5.6)",
-  "version": "5.5.6",
+  "name": "RoutePilot – GPT-5 Prompt Router (v5.6.1)",
+  "version": "5.6.1",
   "description": "One-click routing controls (reasoning effort, complexity, verbosity, push\u2011back), silent meta injection, log, chime on completion. Fixes: Hide\u2192draggable FAB; single tab; panel/FAB position persist.",
   "permissions": [
     "storage",
@@ -32,5 +32,14 @@
     "32": "icon32.png",
     "48": "icon48.png",
     "128": "icon128.png"
-  }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["Chime.wav"],
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://chat.openai.com/*"
+      ]
+    }
+  ]
 }
